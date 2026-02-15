@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kyros Coffee – Premium Colombian Coffee</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #faf9f7;
+            --bg-secondary: #e8e4de;
+            --dark-accent: #2c2420;
+            --text-primary: #5a4f47;
+            --footer-dark: #1a1511;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            color: var(--text-primary);
+            background-color: var(--bg-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: Georgia, serif;
+            font-weight: 400;
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(250, 249, 247, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(92, 79, 71, 0.1);
+        }
+
+        nav {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1.25rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            font-family: Georgia, serif;
+            font-size: 1.25rem;
+            letter-spacing: 0.25em;
+            font-weight: 400;
+            color: var(--dark-accent);
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-primary);
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: opacity 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            opacity: 0.6;
+        }
+
+        .region-selector select {
+            padding: 0.5rem 2rem 0.5rem 0.75rem;
+            border: 1px solid rgba(92, 79, 71, 0.2);
+            border-radius: 2rem;
+            background: transparent;
+            color: var(--text-primary);
+            font-size: 0.875rem;
+            cursor: pointer;
+        }
+
+        /* Product Section */
+        .product-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 8rem 2rem 4rem;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: start;
+        }
+
+        /* Product Image */
+        .product-image-section {
+            position: sticky;
+            top: 120px;
+        }
+
+        .product-image {
+            position: relative;
+            aspect-ratio: 4/5;
+            background: #f5f1ed;
+            border-radius: 1.5rem;
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+
+        .product-svg {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            transition: opacity 0.8s ease;
+        }
+
+        .product-badge {
+            position: absolute;
+            top: 1.5rem;
+            left: 1.5rem;
+            background: white;
+            padding: 0.625rem 1.25rem;
+            border-radius: 2rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+        }
+
+        .product-thumbnails {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .thumbnail {
+            width: 80px;
+            height: 80px;
+            border-radius: 0.75rem;
+            background: #f5f1ed;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .thumbnail.active {
+            border-color: var(--dark-accent);
+        }
+
+        .thumbnail svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Product Details */
+        .product-details {
+            padding-top: 2rem;
+        }
+
+        .breadcrumb {
+            font-size: 0.875rem;
+            margin-bottom: 1.5rem;
+            opacity: 0.6;
+        }
+
+        .breadcrumb a {
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        .product-title {
+            font-size: 3rem;
+            line-height: 1.2;
+            margin-bottom: 1rem;
+            color: var(--dark-accent);
+        }
+
+        .product-tagline {
+            font-size: 1.125rem;
+            margin-bottom: 2rem;
+            opacity: 0.8;
+            font-style: italic;
+        }
+
+        .product-price {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            color: var(--dark-accent);
+        }
+
+        /* SKU Selector */
+        .sku-selector {
+            margin-bottom: 2.5rem;
+        }
+
+        .sku-label {
+            font-size: 0.875rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .sku-options {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.75rem;
+        }
+
+        .sku-option {
+            padding: 1rem;
+            border: 2px solid rgba(92, 79, 71, 0.15);
+            border-radius: 0.75rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            background: white;
+        }
+
+        .sku-option:hover {
+            border-color: rgba(92, 79, 71, 0.3);
+        }
+
+        .sku-option.active {
+            border-color: var(--dark-accent);
+            background: rgba(44, 36, 32, 0.03);
+        }
+
+        .sku-option-name {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            color: var(--dark-accent);
+            font-size: 0.95rem;
+        }
+
+        .sku-option-price {
+            font-size: 0.875rem;
+            opacity: 0.7;
+        }
+
+        /* Quantity & Add to Cart */
+        .purchase-section {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .quantity-selector {
+            display: flex;
+            align-items: center;
+            border: 2px solid rgba(92, 79, 71, 0.15);
+            border-radius: 0.75rem;
+            background: white;
+        }
+
+        .quantity-btn {
+            width: 44px;
+            height: 52px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            font-size: 1.25rem;
+            color: var(--text-primary);
+            transition: opacity 0.3s ease;
+        }
+
+        .quantity-btn:hover {
+            opacity: 0.6;
+        }
+
+        .quantity-value {
+            min-width: 50px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .add-to-cart {
+            flex: 1;
+            padding: 1rem 2.5rem;
+            background: var(--dark-accent);
+            color: white;
+            border: none;
+            border-radius: 0.75rem;
+            font-size: 1rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .add-to-cart:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+
+        /* Subscription Teaser */
+        .subscription-teaser {
+            background: var(--bg-secondary);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .subscription-teaser-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--dark-accent);
+        }
+
+        .subscription-teaser-text {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            margin-bottom: 1rem;
+        }
+
+        .subscription-link {
+            color: var(--dark-accent);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .subscription-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Product Info Tabs */
+        .product-info-tabs {
+            border-top: 1px solid rgba(92, 79, 71, 0.1);
+            margin-top: 2.5rem;
+        }
+
+        .tab-header {
+            display: flex;
+            gap: 2rem;
+            border-bottom: 1px solid rgba(92, 79, 71, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .tab-btn {
+            padding: 1rem 0;
+            background: none;
+            border: none;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            opacity: 0.5;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn.active {
+            opacity: 1;
+            border-bottom-color: var(--dark-accent);
+        }
+
+        .tab-content {
+            display: none;
+            padding-top: 1rem;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .flavor-notes {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .flavor-tag {
+            padding: 0.5rem 1rem;
+            background: white;
+            border: 1px solid rgba(92, 79, 71, 0.15);
+            border-radius: 2rem;
+            font-size: 0.875rem;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .info-item {
+            padding: 1.25rem;
+            background: white;
+            border-radius: 0.75rem;
+            border: 1px solid rgba(92, 79, 71, 0.1);
+        }
+
+        .info-item-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            opacity: 0.6;
+            margin-bottom: 0.5rem;
+        }
+
+        .info-item-value {
+            font-weight: 600;
+            color: var(--dark-accent);
+        }
+
+        .quality-badges {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .quality-badge {
+            padding: 1rem;
+            background: white;
+            border-radius: 0.75rem;
+            border: 1px solid rgba(92, 79, 71, 0.1);
+            text-align: center;
+        }
+
+        .quality-badge-icon {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .quality-badge-text {
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--footer-dark);
+            color: rgba(255, 255, 255, 0.7);
+            padding: 4rem 2rem 2rem;
+            margin-top: 6rem;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-column h5 {
+            color: white;
+            font-size: 0.95rem;
+            margin-bottom: 1.25rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+        }
+
+        .footer-column ul {
+            list-style: none;
+        }
+
+        .footer-column a {
+            color: rgba(255, 255, 255, 0.6);
+            text-decoration: none;
+            font-size: 0.9rem;
+            display: block;
+            margin-bottom: 0.75rem;
+            transition: color 0.3s ease;
+        }
+
+        .footer-column a:hover {
+            color: white;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 2rem;
+            text-align: center;
+            font-size: 0.85rem;
+            opacity: 0.5;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .product-grid {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+
+            .product-image-section {
+                position: relative;
+                top: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .product-title {
+                font-size: 2rem;
+            }
+
+            .sku-options {
+                grid-template-columns: 1fr;
+            }
+
+            .purchase-section {
+                flex-direction: column;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* Animations */
+        @keyframes shimmer {
+            0%, 100% { opacity: 0.1; }
+            50% { opacity: 0.15; }
+        }
+
+        .product-image:hover .product-svg {
+            animation: shimmer 2s ease-in-out;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <nav>
+            <a href="kyros-homepage.html" class="logo">KYROS</a>
+            <ul class="nav-links">
+                <li><a href="#coffee">Coffee</a></li>
+                <li><a href="#philosophy">Philosophy</a></li>
+                <li><a href="#quality">Quality</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+            <div class="region-selector">
+                <select>
+                    <option>USA</option>
+                    <option>UAE</option>
+                </select>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Product Section -->
+    <div class="product-container">
+        <div class="product-grid">
+            <!-- Product Image -->
+            <div class="product-image-section">
+                <div class="product-image">
+                    <!-- Natural Process SVG (Default) -->
+                    <svg id="svg-natural" class="product-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="20" y="20" width="60" height="60" fill="none" stroke="currentColor" stroke-width="0.5" opacity="0.1"/>
+                        <rect x="30" y="30" width="40" height="40" fill="none" stroke="currentColor" stroke-width="0.5" opacity="0.1"/>
+                        <rect x="40" y="40" width="20" height="20" fill="none" stroke="currentColor" stroke-width="0.5" opacity="0.1"/>
+                        <rect x="47" y="47" width="6" height="6" fill="currentColor" opacity="0.1"/>
+                    </svg>
+
+                    <!-- Washed Process SVG -->
+                    <svg id="svg-washed" class="product-svg" style="display: none;" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M 0 20 Q 25 10 50 20 T 100 20" fill="none" stroke="currentColor" stroke-width="0.5" opacity="0.1"/>
+                        <path d="M 0 30 Q 25 20 50 30 T 100 30" fill="none" stroke="currentColor" stroke-width="0.5" opacity="0.1"/>
+                        <path d="M 0 40 Q 25 30 50 40 T 100 40" fill="none" stroke="currentColor" stroke-width="0.5" opacity="0.1"/>
+                        <path d="M 0 50 Q 25 40 50 50 T 100 50" fill="none" stroke="currentColor" stroke-width="0.5" opacity="0.1"/>
+                        <path d="M 0 60 Q 25 50 50 60 T 100 60" fill="none" stroke="currentColor" stroke-width="0.5" opacity="0.1"/>
+                        <path d="M 0 70 Q 25 60 50 70 T 100 70" fill="none" stroke="currentColor" stroke-width="0.5" opacity="0.1"/>
+                    </svg>
+
+                    <!-- Decaf SVG -->
+                    <svg id="svg-decaf" class="product-svg" style="display: none;" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="50" cy="50" r="40" fill="none" stroke="currentColor" stroke-width="0.5" opacity="0.1"/>
+                        <circle cx="50" cy="50" r="30" fill="none" stroke="currentColor" stroke-width="0.5" opacity="0.1"/>
+                        <circle cx="50" cy="50" r="20" fill="none" stroke="currentColor" stroke-width="0.5" opacity="0.1"/>
+                        <circle cx="50" cy="50" r="10" fill="none" stroke="currentColor" stroke-width="0.5" opacity="0.1"/>
+                        <circle cx="50" cy="50" r="2" fill="currentColor" opacity="0.1"/>
+                    </svg>
+
+                    <div id="product-badge" class="product-badge">Medium Roast</div>
+                </div>
+
+                <div class="product-thumbnails">
+                    <div class="thumbnail" data-sku="washed">
+                        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M 0 30 Q 25 20 50 30 T 100 30" fill="none" stroke="currentColor" stroke-width="1" opacity="0.2"/>
+                            <path d="M 0 50 Q 25 40 50 50 T 100 50" fill="none" stroke="currentColor" stroke-width="1" opacity="0.2"/>
+                            <path d="M 0 70 Q 25 60 50 70 T 100 70" fill="none" stroke="currentColor" stroke-width="1" opacity="0.2"/>
+                        </svg>
+                    </div>
+                    <div class="thumbnail active" data-sku="natural">
+                        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="30" y="30" width="40" height="40" fill="none" stroke="currentColor" stroke-width="1" opacity="0.2"/>
+                            <rect x="45" y="45" width="10" height="10" fill="currentColor" opacity="0.2"/>
+                        </svg>
+                    </div>
+                    <div class="thumbnail" data-sku="decaf">
+                        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="50" cy="50" r="35" fill="none" stroke="currentColor" stroke-width="1" opacity="0.2"/>
+                            <circle cx="50" cy="50" r="20" fill="none" stroke="currentColor" stroke-width="1" opacity="0.2"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product Details -->
+            <div class="product-details">
+                <div class="breadcrumb">
+                    <a href="kyros-homepage.html">Home</a> / <a href="#coffee">Coffee</a> / <span id="breadcrumb-name">Rich & Complex</span>
+                </div>
+
+                <h1 id="product-title" class="product-title">Rich & Complex</h1>
+                <p id="product-tagline" class="product-tagline">Perfect for espresso, any drink with milk, or Bulletproof coffee 💪</p>
+                
+                <div id="product-price" class="product-price">$34.00</div>
+
+                <!-- SKU Selector -->
+                <div class="sku-selector">
+                    <label class="sku-label">Choose Your Profile</label>
+                    <div class="sku-options">
+                        <div class="sku-option" data-sku="washed" data-price="30">
+                            <div class="sku-option-name">Clean & Bright</div>
+                            <div class="sku-option-price">$30.00</div>
+                        </div>
+                        <div class="sku-option active" data-sku="natural" data-price="34">
+                            <div class="sku-option-name">Rich & Complex</div>
+                            <div class="sku-option-price">$34.00</div>
+                        </div>
+                        <div class="sku-option" data-sku="decaf" data-price="33">
+                            <div class="sku-option-name">Deep Sleep Decaf</div>
+                            <div class="sku-option-price">$33.00</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Purchase Section -->
+                <div class="purchase-section">
+                    <div class="quantity-selector">
+                        <button class="quantity-btn" onclick="updateQuantity(-1)">−</button>
+                        <div id="quantity" class="quantity-value">1</div>
+                        <button class="quantity-btn" onclick="updateQuantity(1)">+</button>
+                    </div>
+                    <button class="add-to-cart">ADD TO CART</button>
+                </div>
+
+                <!-- Subscription Teaser -->
+                <div class="subscription-teaser">
+                    <div class="subscription-teaser-title">Save with subscription</div>
+                    <div class="subscription-teaser-text">Get 7% off and never run out. Pause or cancel anytime.</div>
+                    <a href="#" class="subscription-link">
+                        Learn more →
+                    </a>
+                </div>
+
+                <!-- Product Info Tabs -->
+                <div class="product-info-tabs">
+                    <div class="tab-header">
+                        <button class="tab-btn active" data-tab="details">Details</button>
+                        <button class="tab-btn" data-tab="brewing">Brewing</button>
+                        <button class="tab-btn" data-tab="quality">Quality</button>
+                    </div>
+
+                    <!-- Details Tab -->
+                    <div id="tab-details" class="tab-content active">
+                        <h3 style="margin-bottom: 1rem; color: var(--dark-accent);">Flavor Profile</h3>
+                        <div id="flavor-notes" class="flavor-notes">
+                            <span class="flavor-tag">Chocolate</span>
+                            <span class="flavor-tag">Plum</span>
+                            <span class="flavor-tag">Guava</span>
+                            <span class="flavor-tag">Red Fruits</span>
+                            <span class="flavor-tag">Citric Acid</span>
+                            <span class="flavor-tag">Tangerine</span>
+                        </div>
+                        
+                        <p id="product-description" style="line-height: 1.8; opacity: 0.8; margin-bottom: 1.5rem;">
+                            Our hero product. Natural process brings out the deepest, most complex flavors from Colombian high-altitude beans. Sun-dried for weeks to develop rich fruit notes and a full body. Perfect for espresso, any drink with milk, or Bulletproof coffee. Or if you just prefer a stronger tasting brew.
+                        </p>
+
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <div class="info-item-label">Origin</div>
+                                <div class="info-item-value">Huila, Colombia</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-item-label">Elevation</div>
+                                <div class="info-item-value">1,600-1,900m</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-item-label">Process</div>
+                                <div id="process-method" class="info-item-value">Natural (Sun-Dried)</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-item-label">Roast Level</div>
+                                <div id="roast-level" class="info-item-value">Medium</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-item-label">Size</div>
+                                <div class="info-item-value">340g / 12oz</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-item-label">Format</div>
+                                <div class="info-item-value">Whole Bean</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Brewing Tab -->
+                    <div id="tab-brewing" class="tab-content">
+                        <h3 style="margin-bottom: 1rem; color: var(--dark-accent);">Brewing Recommendations</h3>
+                        <p style="line-height: 1.8; opacity: 0.8; margin-bottom: 1.5rem;" id="brewing-guide">
+                            This coffee shines in espresso and milk-based drinks. The natural process creates enough body and sweetness to cut through milk beautifully. For espresso: 18-20g dose, 1:2-1:2.5 ratio, 25-30 second extraction. For pour-over: 15:1 water ratio, 200°F, medium-fine grind. For cold brew: coarse grind, 1:8 ratio, 16-24 hours.
+                        </p>
+
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <div class="info-item-label">Best For</div>
+                                <div id="best-for" class="info-item-value">Espresso, Milk Drinks</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-item-label">Grind Size</div>
+                                <div class="info-item-value">Fine to Medium</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-item-label">Water Temp</div>
+                                <div class="info-item-value">195-205°F</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-item-label">Brew Time</div>
+                                <div class="info-item-value">25-35 seconds (espresso)</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quality Tab -->
+                    <div id="tab-quality" class="tab-content">
+                        <h3 style="margin-bottom: 1rem; color: var(--dark-accent);">Quality Standards</h3>
+                        <p style="line-height: 1.8; opacity: 0.8; margin-bottom: 1.5rem;">
+                            Every batch is third-party tested for mycotoxins, heavy metals, and pesticides. We maintain direct relationships with farmers in Colombia, ensuring transparency and fair compensation. Roasted to order in small batches and shipped within 48 hours for peak freshness.
+                        </p>
+
+                        <div class="quality-badges">
+                            <div class="quality-badge">
+                                <div class="quality-badge-icon">✓</div>
+                                <div class="quality-badge-text">Third-Party Tested</div>
+                            </div>
+                            <div class="quality-badge">
+                                <div class="quality-badge-icon">🌱</div>
+                                <div class="quality-badge-text">Direct Trade</div>
+                            </div>
+                            <div class="quality-badge">
+                                <div class="quality-badge-icon">📍</div>
+                                <div class="quality-badge-text">Full Traceability</div>
+                            </div>
+                            <div class="quality-badge">
+                                <div class="quality-badge-icon">🔬</div>
+                                <div class="quality-badge-text">Lab Verified Purity</div>
+                            </div>
+                        </div>
+
+                        <div class="info-grid" style="margin-top: 2rem;">
+                            <div class="info-item">
+                                <div class="info-item-label">Roast Freshness</div>
+                                <div class="info-item-value">Roasted to Order</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-item-label">Ship Time</div>
+                                <div class="info-item-value">Within 48 Hours</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-item-label">Farm Partnership</div>
+                                <div class="info-item-value">Direct, Long-term</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-item-label">Testing</div>
+                                <div class="info-item-value">Every Batch</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-grid">
+                <div class="footer-column">
+                    <h5>Brand</h5>
+                    <ul>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Our Philosophy</a></li>
+                        <li><a href="#">Sustainability</a></li>
+                        <li><a href="#">Certifications</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h5>Shop</h5>
+                    <ul>
+                        <li><a href="#">All Coffee</a></li>
+                        <li><a href="#">Subscriptions</a></li>
+                        <li><a href="#">Brewing Gear</a></li>
+                        <li><a href="#">Gift Cards</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h5>Company</h5>
+                    <ul>
+                        <li><a href="#">Journal</a></li>
+                        <li><a href="#">Press</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Wholesale</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h5>Support</h5>
+                    <ul>
+                        <li><a href="#">Contact</a></li>
+                        <li><a href="#">Brewing Guide</a></li>
+                        <li><a href="#">Shipping & Returns</a></li>
+                        <li><a href="#">FAQ</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                © 2026 Kyros Coffee. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Product data
+        const products = {
+            washed: {
+                name: 'Clean & Bright',
+                title: 'Clean & Bright',
+                tagline: 'If you prefer a filter roast, or a lighter, fruitier coffee and drink it black.',
+                price: 30,
+                badge: 'Medium Roast',
+                flavors: ['Almond', 'Caramel', 'Red Fruits'],
+                description: 'Washed process brings out the clean, bright characteristics of high-altitude Colombian beans. Washed coffee goes through a meticulous wet processing method that highlights clarity and acidity. Perfect for filter brewing and black coffee lovers who appreciate nuanced flavors.',
+                process: 'Washed',
+                roast: 'Medium',
+                bestFor: 'Pour Over, Filter',
+                brewingGuide: 'This coffee excels in pour-over and filter methods. The washed process creates a clean cup with bright acidity. For pour-over: 16:1 water ratio, 200°F, medium grind. Bloom for 30-45 seconds, then slow, steady pour. Total brew time: 3-3.5 minutes. For drip: medium grind, standard ratios work beautifully.'
+            },
+            natural: {
+                name: 'Rich & Complex',
+                title: 'Rich & Complex',
+                tagline: 'Perfect for espresso, any drink with milk, or Bulletproof coffee 💪',
+                price: 34,
+                badge: 'Medium Roast',
+                flavors: ['Chocolate', 'Plum', 'Guava', 'Red Fruits', 'Citric Acid', 'Tangerine'],
+                description: 'Our hero product. Natural process brings out the deepest, most complex flavors from Colombian high-altitude beans. Sun-dried for weeks to develop rich fruit notes and a full body. Perfect for espresso, any drink with milk, or Bulletproof coffee. Or if you just prefer a stronger tasting brew.',
+                process: 'Natural (Sun-Dried)',
+                roast: 'Medium',
+                bestFor: 'Espresso, Milk Drinks',
+                brewingGuide: 'This coffee shines in espresso and milk-based drinks. The natural process creates enough body and sweetness to cut through milk beautifully. For espresso: 18-20g dose, 1:2-1:2.5 ratio, 25-30 second extraction. For pour-over: 15:1 water ratio, 200°F, medium-fine grind. For cold brew: coarse grind, 1:8 ratio, 16-24 hours.'
+            },
+            decaf: {
+                name: 'Deep Sleep Decaf',
+                title: 'Deep Sleep Decaf',
+                tagline: 'If you\'re avoiding caffeine! Or for true health optimisers to squeeze in an extra dose of polyphenols in the afternoon.',
+                price: 33,
+                badge: 'Dark Roast',
+                flavors: ['Almond', 'Citric Acid', 'Clove'],
+                description: 'Swiss Water Process decaf — no chemicals, just pure water and time. Retains 99.9% of flavor while removing caffeine. Perfect for afternoon cups, evening rituals, or anyone optimizing their caffeine intake without sacrificing quality. Dark roast brings out deep, comforting notes.',
+                process: 'Swiss Water Decaf',
+                roast: 'Dark',
+                bestFor: 'All Methods',
+                brewingGuide: 'Versatile across all brewing methods. The Swiss Water Process preserves flavor integrity. For espresso: slightly longer extraction (30-35s) works well with the darker roast. For pour-over: 15:1 ratio, 195-200°F, medium grind. The deeper roast profile makes this excellent for evening French press or cold brew without the caffeine.'
+            }
+        };
+
+        let currentSKU = 'natural';
+        let quantity = 1;
+
+        // SKU Selection
+        document.querySelectorAll('.sku-option').forEach(option => {
+            option.addEventListener('click', function() {
+                document.querySelectorAll('.sku-option').forEach(opt => opt.classList.remove('active'));
+                this.classList.add('active');
+                
+                const sku = this.dataset.sku;
+                currentSKU = sku;
+                updateProduct(sku);
+            });
+        });
+
+        // Thumbnail Selection
+        document.querySelectorAll('.thumbnail').forEach(thumb => {
+            thumb.addEventListener('click', function() {
+                document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                
+                const sku = this.dataset.sku;
+                currentSKU = sku;
+                
+                // Update SKU option
+                document.querySelectorAll('.sku-option').forEach(opt => opt.classList.remove('active'));
+                document.querySelector(`.sku-option[data-sku="${sku}"]`).classList.add('active');
+                
+                updateProduct(sku);
+            });
+        });
+
+        // Tab Navigation
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                
+                const tab = this.dataset.tab;
+                document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+                document.getElementById(`tab-${tab}`).classList.add('active');
+            });
+        });
+
+        // Update Product
+        function updateProduct(sku) {
+            const product = products[sku];
+            
+            // Update text content
+            document.getElementById('breadcrumb-name').textContent = product.name;
+            document.getElementById('product-title').textContent = product.title;
+            document.getElementById('product-tagline').textContent = product.tagline;
+            document.getElementById('product-price').textContent = `$${product.price}.00`;
+            document.getElementById('product-badge').textContent = product.badge;
+            document.getElementById('product-description').textContent = product.description;
+            document.getElementById('process-method').textContent = product.process;
+            document.getElementById('roast-level').textContent = product.roast;
+            document.getElementById('best-for').textContent = product.bestFor;
+            document.getElementById('brewing-guide').textContent = product.brewingGuide;
+            
+            // Update flavor notes
+            const flavorNotesContainer = document.getElementById('flavor-notes');
+            flavorNotesContainer.innerHTML = product.flavors.map(flavor => 
+                `<span class="flavor-tag">${flavor}</span>`
+            ).join('');
+            
+            // Update SVG display
+            document.querySelectorAll('.product-svg').forEach(svg => svg.style.display = 'none');
+            document.getElementById(`svg-${sku}`).style.display = 'block';
+        }
+
+        // Quantity Controls
+        function updateQuantity(change) {
+            quantity = Math.max(1, quantity + change);
+            document.getElementById('quantity').textContent = quantity;
+        }
+
+        // Initialize with default product
+        updateProduct('natural');
+    </script>
+</body>
+</html>
